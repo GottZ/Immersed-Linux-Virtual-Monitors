@@ -505,7 +505,7 @@ after reboot you should be greeted by kde with options to setup your screen posi
 
 I use the following shell command prior to starting immersed. you can also run it after starting it, but have to go to the immersed menu and select "Reset Wayland Screens" afterwards.
 
-adjust your the positions according to your setup.
+adjust your screen positions according to your desired setup. eDP-1 is my internal laptop screen. you might want to select something different there.
 
 enable virtual screens:
 ```bash
