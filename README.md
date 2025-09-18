@@ -23,6 +23,7 @@
     - [Compiling and Installing the EVDI Module](#compiling-and-installing-the-evdimodule)
     - [Module Activation](#module-activation)
     - [Virtual monitors setup](#virtual-monitorssetup)
+    - [KDE setup](#kde-setup)
     - [Limitations](#limitations)
   - [Headless ghost adapter](#headless-ghostadapter)
   - [Scripts](#scripts)
@@ -476,6 +477,46 @@ force_connect() {
 And execute the function in a new terminal, for example: `force_connect DVI-I-3-4 1920x1080 right-of eDP1`
 
 You can also get some scripts of these steps shared on the [script folder](scripts/evdi-scripts/).
+
+### KDE setup
+
+Since KDE does not support certain required wayland protocols to interface with virtual screen creation, kernel command line parameters have to be used to achieve virtual screens.
+
+in `/etc/default/grub` extend your `GRUB_CMDLINE_LINUX_DEFAULT` with video instructions according to kernel specification [see here for more details](https://www.kernel.org/doc/html/latest/fb/modedb.html)
+
+example, creating two enabled virtual evdi screens with fullhd resolution:
+```bash
+GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet video=DVI-I-1:1920x1080@60e video=DVI-I-2:1920x1080@60e"
+```
+
+in `/etc/modprobe.d` create a file called `evdi.conf` containing the following:
+```
+options evdi initial_device_count=2
+```
+
+in `/etc/modules-load.d` create a file called `evdi.conf` containing:
+```
+evdi
+```
+
+reboot.
+
+after reboot you should be greeted by kde with options to setup your screen positioning.
+
+I use the following shell command prior to starting immersed. you can also run it after starting it, but have to go to the immersed menu and select "Reset Wayland Screens" afterwards.
+
+adjust your the positions according to your setup.
+
+enable virtual screens:
+```bash
+kscreen-doctor output.DVI-I-1.enable output.DVI-I-2.enable output.eDP-1.enable output.DVI-I-1.position.0,0 output.eDP-1.position.1920,0 output.DVI-I-2.position.3840,0
+```
+
+disable virtual screens:
+```bash
+kscreen-doctor output.DVI-I-1.disable output.DVI-I-2.disable output.eDP-1.enable output.eDP-1.position.0,0
+```
+
 
 ### Limitations
 
